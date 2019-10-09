@@ -24,18 +24,31 @@ export const list = {
 
 export const reducer = (state, action) => {
     switch(action.type) {
-        case 'ADD_ITEM':
+        case "ADD_TODO":
             const newToDo = {
                 item: action.payload,
                 completed: false,
                 id: Date.now()
             };
-            return {
+          return {
                 ...state,
-                list: [...state.items, newToDo]
+                items: [...state.items, newToDo]
             };
-    default:
-        return state;
+        case "TOGGLE_TASK": 
+          return {
+                 ...state,
+                 items: state.items.map(item => 
+                 item.id === action.payload ? {...item, completed: !item.completed } : item    
+                 )
+            }
+        case "CLEAR":
+          return{
+                  ...state,
+                  items: state.items.filter(item => item.completed === false)
+                    }
+
+       default:
+            return state;
     }
     
 }

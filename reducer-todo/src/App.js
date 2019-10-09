@@ -1,24 +1,31 @@
-import React, { useState, useReducer} from 'react';
+import React, {useState, useReducer } from 'react';
+import ToDo from './components/ToDo'
 import './App.css';
-import {ToDo} from './components/ToDo';
-import {reducer, list} from './reducers/reducer';
+import {list, reducer } from './reducers/reducer'
+
+
+
 
 function App() {
+
   const [state, dispatch] = useReducer(reducer, list);
   const [item, setItem] = useState('')
 
-  const handleChanges = event => {
-    setItem(event.target.value)
-    event.preventDefault();
+  const submitTask = e => {
+    e.preventDefault();
   }
-  const submitItem = event => {
-    event.preventDefault();
+  const handleChanges = e => {
+    setItem(e.target.value)
   }
-    return (
-      <div className="App">
-      <ToDo dispatch={dispatch}/>
+  const toggleTask = (id) => {
+    dispatch( { type:"TOGGLE_TASK", payload: id})
+  }
 
-      <form onSubmit={submitItem}>
+
+
+  return (
+    <div className="App">
+      <form onSubmit={submitTask}>
         <input
           type="text"
           name="item"
@@ -26,10 +33,12 @@ function App() {
           onChange={handleChanges}
           placeholder="Add item"
         />
-        <button onClick={() => dispatch({ type: 'ITEM', payload: item })}>Add Item</button>
+        <button onClick={() => dispatch({ type: 'ADD_TODO', payload: item })}>Add a Task</button>
       </form>
-      </div>
-    );
-  }
+      <button onClick={() => dispatch({type:"CLEAR"})}>Clear Completed Tasks</button>
+      <ToDo state={state.items} toggleTask={toggleTask}/>
+    </div>
+  );
+}
 
 export default App;
